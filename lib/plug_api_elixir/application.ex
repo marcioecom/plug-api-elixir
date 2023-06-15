@@ -7,12 +7,14 @@ defmodule PlugApiElixir.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {Plug.Cowboy, scheme: :http, plug: PlugApiElixir.Router, options: [port: 4000]}
+      {Plug.Cowboy, scheme: :http, plug: PlugApiElixir.Router, options: [port: cowboy_port()]}
     ]
     opts = [strategy: :one_for_one, name: PlugApiElixir.Supervisor]
 
-    Logger.info("Starting application")
+    Logger.info("Starting application #{cowboy_port()}")
 
     Supervisor.start_link(children, opts)
   end
+
+  defp cowboy_port, do: Application.get_env(:plug_api_elixir, :port, 3000)
 end
